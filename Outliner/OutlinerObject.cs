@@ -15,28 +15,15 @@ public class OutlinerObject : MonoBehaviour
 
 	void OnEnable()
 	{
-		SetOutlineVisibilty(true);
+		if (outliner == null || outlinedObject == null) return;
+		outliner.AddOutlinedObject(outlinedObject);
 	}
 
 
 	void OnDisable()
 	{
-		SetOutlineVisibilty(false);
-	}
-
-
-	public void SetOutlineVisibilty(bool visible)
-	{
 		if (outliner == null || outlinedObject == null) return;
-
-		if (visible)
-		{
-			outliner.AddOutlinedObject(outlinedObject);
-		}
-		else
-		{
-			outliner.RemoveOutlinedObject(outlinedObject);
-		}
+		outliner.RemoveOutlinedObject(outlinedObject);
 	}
 
 }
