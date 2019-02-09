@@ -1,4 +1,3 @@
-
 #ifndef DRAW_COLOR
 #define DRAW_COLOR 1
 #endif
@@ -7,7 +6,7 @@
  
 sampler2D _MainTex;
 float4 _MainTex_ST;
-float _DoClip;
+float _DoClip = 0;
 fixed _Cutoff;
  
 struct appdata_t

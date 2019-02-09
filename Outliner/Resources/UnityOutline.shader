@@ -1,7 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
- 
-Shader "Hidden/UnityOutline"
+﻿Shader "Hidden/Outliner"
 {
     Properties
     {
@@ -35,7 +32,6 @@ Shader "Hidden/UnityOutline"
         ENDCG
        
         Tags { "RenderType"="Opaque" }
- 
 
         // #0: things that are visible (pass depth). 1 in alpha, 1 in red (SM3.0)
         Pass
@@ -117,7 +113,7 @@ Shader "Hidden/UnityOutline"
             half4 fragment(Varying i) : SV_Target
             {
                 float2 step = _MainTex_TexelSize.xy * _BlurDirection;
-                float2 uv = i.uv - step * 4;
+                float2 uv = i.uv - step * 4;//4;
                 half4 col = 0;
                 for (int tap = 0; tap < 9; ++tap)
                 {
@@ -200,6 +196,7 @@ Shader "Hidden/UnityOutline"
             sampler2D _MainTex;
             float4 _MainTex_TexelSize;
             half4 _OutlineColor;
+            float _OutlineInFrontOpacity;
  
             half4 fragment(Varying i) : SV_Target
             {
@@ -207,26 +204,27 @@ Shader "Hidden/UnityOutline"
                
                 bool isSelected = col.a > 0.9;
                 bool inFront = col.g > 0.0;
-				bool backMask = col.r == 0.0;
+				//bool backMask = col.r == 0.0;
 
-                float alpha = saturate(col.b * 10);
+                //float alpha = saturate(col.b * 10);
+                float alpha = saturate(col.b * 10) * _OutlineColor.a;
                 if (isSelected)
                 {
                     // UnityOutline color alpha controls how much tint the whole object gets
-                    alpha = _OutlineColor.a;
-                    if (any(i.uv - _MainTex_TexelSize.xy*2 < 0) || any(i.uv + _MainTex_TexelSize.xy*2 > 1))
-                        alpha = 1;
+                    alpha = 0; //_OutlineColor.a;
+                    //if (any(i.uv - _MainTex_TexelSize.xy*2 < 0) || any(i.uv + _MainTex_TexelSize.xy*2 > 1))
+                      //  alpha = 1;
                 }
 				
                 if (!inFront)
                 {
-                    alpha *= 0.3;
+                    alpha *= _OutlineInFrontOpacity;//0.3;
                 }
 
-                if (backMask && isSelected)
-                {
-                    alpha = 0;
-				}
+                //if (backMask && isSelected)
+                //{
+                    //alpha = 0;
+				//}
 
                 float4 UnityOutlineColor = float4(_OutlineColor.rgb,alpha);
                 return UnityOutlineColor;
