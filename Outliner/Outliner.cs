@@ -80,7 +80,7 @@ public class Outliner : MonoBehaviour
 
 
 	public void CreateCommandBuffer()
-    {
+	{
 		// nothing to outline? cleanup
 		if (outlinedObjects.Count == 0)
 		{
@@ -124,12 +124,12 @@ public class Outliner : MonoBehaviour
 		// render selected objects into a mask buffer, with different colors for visible vs occluded ones 
 		float id = 0f;
 		foreach (var collection in outlinedObjects)
-        {
-            id += 0.25f;
-            commandBuffer.SetGlobalFloat("_ObjectId", id);
+		{
+            		id += 0.25f;
+			commandBuffer.SetGlobalFloat("_ObjectId", id);
 
 			foreach (var render in collection.renderers)
-            {
+			{
 				Material mat = outlineMaterial;
 				if (render.material.mainTexture != null)
 				{
@@ -141,7 +141,7 @@ public class Outliner : MonoBehaviour
 				commandBuffer.DrawRenderer(render, mat, 0, 1);
 				commandBuffer.DrawRenderer(render, mat, 0, 0);
 			}
-        }
+		}
 
 		// object ID edge dectection pass
 		int bTempID = Shader.PropertyToID("_bTemp");
